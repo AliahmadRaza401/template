@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "550738307155",
+    "project_id": "aiider-4e30e",
+    "storage_bucket": "aiider-4e30e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550738307155:android:062534d4df550710ec3ea6",
+        "android_client_info": {
+          "package_name": "com.aiidar_restaurant_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHBEN5aISrgCOfvZFGi9VeazUbaz7nFWw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
