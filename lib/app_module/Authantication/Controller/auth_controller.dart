@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:aiidar_restaurant_app/app_module/Dashboard/dash_board.dart';
+import 'package:aiidar_restaurant_app/utils/app_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,8 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:intl/intl.dart';
+
+import '../Model/user_model.dart';
 
 class AuthController extends GetxController {
   TextEditingController otpController = TextEditingController();
@@ -18,7 +23,7 @@ class AuthController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController dobController = TextEditingController();
+  TextEditingController deliveryAddressController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController restAddressController = TextEditingController();
 
@@ -92,7 +97,7 @@ class AuthController extends GetxController {
       lastDate: DateTime.now(),
     );
     if (picked != null) {
-      dobController.text = dateFormat.format(picked);
+      dateFormat.format(picked);
     }
   }
 
@@ -146,7 +151,7 @@ class AuthController extends GetxController {
   }
 
   //SignIn
-  Future<void> signIn() async {
+  Future<void> signIn({bool login = true}) async {
     try {
       isLoading(true);
       update();
@@ -158,10 +163,38 @@ class AuthController extends GetxController {
                 log('Signin succesfully'),
                 if (user != null)
                   {
-                    /// TODO navigation
                     update(),
                     isLoading(false),
-                    clearTextFields()
+                    if (login)
+                      {
+                        Future.delayed(Duration.zero, () async {
+                          DocumentSnapshot docData = await FirebaseFirestore
+                              .instance
+                              .collection('user')
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .get();
+                          if (docData.exists) {
+                            UserInfoModel value =
+                                UserInfoModel.fromDocument(docData);
+                            if (value.type == 'user') {
+                              Get.offAll(const DashBoardScreen());
+                              clearTextFields();
+                            } else {
+                              FirebaseAuth.instance.signOut();
+                              appToast('No user available');
+                              return;
+                            }
+                          } else {
+                            FirebaseAuth.instance.signOut();
+                            appToast('No user available');
+                            return;
+                          }
+                        }),
+                      }
+                    else
+                      {Get.offAll(const DashBoardScreen()), clearTextFields()},
+                    GetStorage()
+                        .write('userID', auth.currentUser!.uid.toString()),
                   }
               });
 
@@ -334,7 +367,7 @@ class AuthController extends GetxController {
     emailController.clear();
     passwordController.clear();
     fullNameController.clear();
-    dobController.clear();
+    deliveryAddressController.clear();
     phoneController.clear();
     confirmPasswordController.clear();
     update();
@@ -343,20 +376,26 @@ class AuthController extends GetxController {
   Future<void> addUser() async {
     log('user is Adding....... ');
     try {
+      String token = '';
+      try {
+        token = (await FirebaseMessaging.instance.getToken())!;
+      } catch (e) {
+        debugPrint('error in token $e');
+      }
       userCollection.doc(auth.currentUser!.uid).set({
         "uid": auth.currentUser!.uid,
         'name': fullNameController.text,
         'email': emailController.text,
         'phone': phoneController.text,
-        'fcm_token': await FirebaseMessaging.instance.getToken(),
-        'dob': dobController.text,
+        'fcm_token': token,
+        'delivery_address': deliveryAddressController.text,
         'password': passwordController.text,
+        'type': 'user',
       }).then((value) async {
         log("user Added");
         FirebaseAuth.instance.currentUser!
             .updateDisplayName(fullNameController.text.trim());
-        await signIn();
-        // Get.toNamed("/welcomeScreen");
+        await signIn(login: false);
         isLoading(false);
         clearTextFields();
         update();

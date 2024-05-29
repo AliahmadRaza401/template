@@ -1,4 +1,4 @@
-package com.aiidar_restaurant_app
+package com.aiidar_user_app
 
 import io.flutter.embedding.android.FlutterActivity
 

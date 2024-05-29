@@ -1,4 +1,3 @@
-import 'package:aiidar_restaurant_app/app_module/Authantication/Views/restaurant_info.dart';
 import 'package:aiidar_restaurant_app/utils/app_color.dart';
 import 'package:aiidar_restaurant_app/widgets/custom_textfield.dart';
 import 'package:aiidar_restaurant_app/widgets/primary_button.dart';
@@ -72,17 +71,12 @@ class SignUpScreen extends StatelessWidget {
                     controller: authController.emailController,
                   ),
                   AppTextField(
-                    lable: 'Date of Birth',
-                    controller: authController.dobController,
-                    hintText: 'dd/mm/yyyy',
-                    enable: false,
-                    onTap: () {
-                      authController.selectDate(context);
-                    },
-                    inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                    lable: 'Delivery Address',
+                    controller: authController.deliveryAddressController,
+                    hintText: 'Enter Delivery Address',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'DOB is required';
+                        return 'Delivery Address is required';
                       }
                       return null;
                     },
@@ -118,12 +112,11 @@ class SignUpScreen extends StatelessWidget {
                         : PrimaryButton(
                             text: 'Next',
                             onTap: () {
-                             Get.to(RestaurantInfoScreen());
-                              // if (_formKey.currentState!.validate()) {
-                              //   authController.signUp();
-                              // } else {
-                              //   return;
-                              // }
+                              if (_formKey.currentState!.validate()) {
+                                authController.signUp();
+                              } else {
+                                return;
+                              }
                             });
                   }),
                   SizedBox(

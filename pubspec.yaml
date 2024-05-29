@@ -47,6 +47,8 @@ dependencies:
   pinput: ^4.0.0
 #  location: ^5.0.2
   intl_phone_number_input: ^0.7.4
+  get_storage: ^2.1.1
+  image_picker: ^1.1.1
 
 dev_dependencies:
   flutter_test:

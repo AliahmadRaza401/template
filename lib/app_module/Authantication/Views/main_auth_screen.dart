@@ -30,7 +30,7 @@ class MainAuthScreen extends StatelessWidget {
               Get.to( LoginScreen());
             }),
               SizedBox(height: 20.h,),
-              PrimaryButton(text: 'Register your Restaurant', onTap: (){
+              PrimaryButton(text: 'Register New Account', onTap: (){
                 Get.to( SignUpScreen());
               }),
               SizedBox(height: 30.h,)

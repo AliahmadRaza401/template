@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import 'app_color.dart';
@@ -29,7 +30,7 @@ import 'app_color.dart';
 // }
 
 appToast(String message){
-  Get.snackbar('',message );
+  Fluttertoast.showToast(msg: message);
 }
 
 Widget appLoader({Color? color}){
