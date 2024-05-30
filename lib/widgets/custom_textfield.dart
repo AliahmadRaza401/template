@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:pinput/pinput.dart';
-
 import '../utils/app_color.dart';
 import 'custom_text.dart';
 
@@ -222,6 +222,177 @@ class AppPinPutField extends StatelessWidget {
             showCursor: true,
             onCompleted: onComplete,
           )
+        ],
+      ),
+    );
+  }
+}
+
+
+class PhonePickerField extends StatefulWidget {
+  final TextEditingController? controller;
+  final String hintText;
+  final TextInputType keyboardType;
+  final int maxLines;
+  final bool isPassword;
+  final bool enable;
+  final Widget? suffixIcon;
+  final Widget? preffixIcon;
+  final EdgeInsets? padding;
+  final bool hasSuffix;
+  final bool hasPreffix;
+  final bool hasTopIcon;
+  final int? maxLength;
+  final Color suffixIconColor;
+  final double suffixIconSize;
+  final Color preffixIconColor;
+  final double preffixIconSize;
+  final VoidCallback? suffixIconFunction;
+  final Color themeColor;
+  final Color backcolor;
+  final bool enabledBorder;
+  final void Function(String)? onChange;
+  final void Function(String)? onComplete;
+  final void Function(String?)? onSaved;
+  final VoidCallback? onEditingComplete;
+  final double? textFieldheight;
+  final TextAlign? textAlign;
+  final String lable;
+
+  PhonePickerField({
+    Key? key,
+    this.controller,
+    required this.hintText,
+    this.keyboardType = TextInputType.phone,
+    this.isPassword = false,
+    this.enable = true,
+    this.suffixIcon,
+    this.enabledBorder = false,
+    this.suffixIconFunction,
+    this.lable = '',
+
+    this.hasSuffix = false,
+    this.hasPreffix = true,
+    this.backcolor = Colors.transparent,
+    this.themeColor = AppColors.primaryColor,
+    this.suffixIconColor = Colors.white,
+    this.suffixIconSize = 20,
+    this.preffixIconColor = Colors.white,
+    this.preffixIconSize = .06,
+    this.onChange,
+    this.onComplete,
+    this.preffixIcon,
+    this.onSaved,
+    this.onEditingComplete,
+    this.maxLines = 1,
+    this.padding,
+    this.hasTopIcon = false,
+    this.maxLength,
+    this.textFieldheight,
+    this.textAlign,
+  }) : super(key: key);
+
+  @override
+  State<PhonePickerField> createState() => _PhonePickerFieldState();
+}
+
+class _PhonePickerFieldState extends State<PhonePickerField> {
+  String error='';
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.lable.isNotEmpty
+              ? AppText(
+              text: widget.lable, fontSize: 16.sp, fontWeight: FontWeight.w500)
+              : const SizedBox.shrink(),
+          widget.lable.isNotEmpty
+              ? SizedBox(
+            height: 10.h,
+          )
+              : const SizedBox.shrink(),
+          Container(
+            decoration: BoxDecoration(
+              border:Border.all(color: AppColors.darkGreyColor),
+              borderRadius: BorderRadius.circular(5)
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: InternationalPhoneNumberInput(
+              onInputChanged: (PhoneNumber number) {
+                if (widget.onChange != null) {
+                  widget.onChange!(number.phoneNumber ?? '');
+                }
+              },
+              // onInputValidated: (bool value) {
+              //   if (validator != null) {
+              //     validator!(value.toString());
+              //   }
+              // },
+              selectorConfig: const SelectorConfig(
+                selectorType: PhoneInputSelectorType.DROPDOWN,
+              ),
+              ignoreBlank: false,
+              autoValidateMode: AutovalidateMode.disabled,
+              selectorTextStyle: const TextStyle(color: Colors.black),
+              initialValue: PhoneNumber(isoCode: 'US'),
+              textFieldController: widget.controller,
+              formatInput: true,
+              keyboardType: widget.keyboardType,
+              inputDecoration: InputDecoration(
+                border: InputBorder.none,
+                // border: const OutlineInputBorder(
+                //     borderSide: BorderSide(color: AppColors.greyColor)),
+                // focusedBorder: const OutlineInputBorder(
+                //     borderSide: BorderSide(color: AppColors.primaryColor)),
+                // disabledBorder: OutlineInputBorder(
+                //     borderSide:
+                //     BorderSide(color: Colors.black.withOpacity(.5))),
+                contentPadding: EdgeInsets.only(left: 10.w,bottom: 5.h),
+                hintText: widget.hintText,
+                hintStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12.sp,
+                    fontFamily: 'Poppins'),
+                suffixIcon: widget.hasSuffix
+                    ? InkWell(
+                  onTap: widget.suffixIconFunction,
+                  child: widget.suffixIcon ??
+                      const Icon(Icons.phone),
+                )
+                    : const SizedBox(),
+                prefixIcon: widget.hasPreffix ? widget.preffixIcon : null,
+                isDense: true,
+              ),
+              onSaved: (PhoneNumber number) {
+                if (widget.onSaved != null) {
+                  widget.onSaved!(number.phoneNumber);
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                 setState(() {
+                   error = 'Phone is required';
+                 });
+                }else{
+                setState(() {
+                  error ='';
+                });
+                }
+                return null;
+              },
+              onFieldSubmitted: widget.onComplete,
+              textAlign: widget.textAlign ?? TextAlign.start,
+            ),
+          ),
+         SizedBox(height: 5.h,),
+         error.isNotEmpty ?Padding(
+           padding: const EdgeInsets.only(left:8),
+           child: AppText(text: error, fontSize: 11,color: Colors.red,fontWeight: FontWeight.w500,),
+         ):SizedBox.shrink()
         ],
       ),
     );

@@ -12,6 +12,7 @@ class PrimaryButton extends StatelessWidget {
   double? textSize;
   double? radius;
   Color? color;
+  Color? textColor;
   Function() onTap;
   bool? iconEnable;
 
@@ -21,6 +22,7 @@ class PrimaryButton extends StatelessWidget {
     this.height,
     this.width,
     this.color,
+    this.textColor,
     this.radius,
     this.textSize,
     required this.onTap,
@@ -46,7 +48,7 @@ class PrimaryButton extends StatelessWidget {
               text: text,
               fontSize: textSize ?? 16.sp,
               fontWeight: FontWeight.w400,
-              color: Colors.white
+              color:textColor?? Colors.white
             ),
 
           ],
@@ -64,6 +66,8 @@ class PrimaryButtonWithIcon extends StatelessWidget {
   double? textSize;
   double? radius;
   Color? color;
+  Color? textColor;
+  Color? borderColor;
   Widget icon;
   Function() onTap;
 
@@ -71,7 +75,9 @@ class PrimaryButtonWithIcon extends StatelessWidget {
     super.key,
     required this.text,
     this.height,
+    this.textColor,
     this.width,
+    this.borderColor,
     this.color,
     this.radius,
     this.textSize,
@@ -89,6 +95,7 @@ class PrimaryButtonWithIcon extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: color ?? AppColors.primaryColor,
+          border:borderColor==null?null: Border.all(color: borderColor!),
           borderRadius: BorderRadius.circular(radius ?? 5),
         ),
         child: Row(
@@ -100,7 +107,7 @@ class PrimaryButtonWithIcon extends StatelessWidget {
               text: text,
               fontSize: textSize ?? 16.sp,
               fontWeight: FontWeight.w400,
-              color: Colors.white,
+              color:textColor?? Colors.white,
             ),
 
           ],
