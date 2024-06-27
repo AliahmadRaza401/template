@@ -1,4 +1,5 @@
 import 'package:aiidar_restaurant_app/app_module/Authantication/Views/main_auth_screen.dart';
+import 'package:aiidar_restaurant_app/widgets/splash_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: const MainAuthScreen(),
+          home: const SplashScreen(),
         );
       },
     );
